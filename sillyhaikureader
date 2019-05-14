@@ -1,0 +1,114 @@
+'use strict';
+
+const APP_ID = undefined;
+const Alexa = require('alexa-sdk');
+/***********
+Data: Customize the data below as you please.
+***********/
+
+const SKILL_NAME = "Silly Haiku Reader";
+const GET_HAIKU_MESSAGE = "I have a haiku for you: ";
+const HELP_MESSAGE = "You can say tell me a haiku... or not.";
+const HELP_REPROMPT = "You can say things like, “Read me a haiku” or “share a poem.”";
+const STOP_MESSAGE = "See you later!";
+
+// Each haiku is written within two single backticks and all haikus are seperated by commas.
+const data = [
+  
+  `Costumes everywhere!
+shrieks of laughter fill the air.
+Happy Halloween!`,
+
+  `Cream, smooth as velvet.
+A taste, sweet as your first love.
+Cold and refreshing`,
+
+  `A swish of tail fins.
+Silver scales shining brightly.
+Down into the dark`,
+
+
+  `Love is a feeling.
+That you can not let go of.
+For it is sticky`,
+
+
+  `Parched throat, roasted skin,
+Scorching sun rays, blazing winds.
+Soul sizzling within!`,
+
+
+  `Sea breeze blows ahead .
+The book flows and the sun glows .
+Perfect summer day`,
+
+
+  `Water runs down stream.
+Fish swimming with the current.
+Life moving along.`,
+
+  `Your words touch my heart.
+whispers of truth reflections.
+with fingers of love.`,
+
+  `Soul shining naked.
+flowing of lightness and love.
+aligned in being.`,
+
+
+  `Love is not complex.
+it demands an absent mind.
+and a present heart.`,
+
+  `Her dress spills open.
+sudden flash of silk and skin.
+sensual simplicity.`,
+
+  `Coolness fills the air.
+Scarves and sweaters everywhere.
+Fall weather is here`,
+
+
+  `I am over you.
+Then my eyes meet yours once more,
+and I fall in love.`,
+
+  `The chill, worming in .
+Shock, pleasure, bursting within .
+Summer tongue awakes`
+];
+
+/***********
+Execution Code: Avoid editing the code below if you don't know JavaScript.
+***********/
+
+const handlers = {
+  'NewSession': function(){
+    this.emit('GetHaikuIntent');
+  },
+  'GetHaikuIntent': function(){
+    const randomHaikuIndex = Math.floor(Math.random() * data.length);
+    const randomHaiku = data[randomHaikuIndex];
+    const speechOutput = GET_HAIKU_MESSAGE + randomHaiku;
+    this.emit(':tellWithCard', speechOutput, SKILL_NAME, randomHaiku);
+  },
+  'AMAZON.HelpIntent': function(){
+    this.emit(':ask', HELP_MESSAGE, HELP_REPROMPT);
+  },
+  'AMAZON.CancelIntent': function(){
+    this.emit(':tell', STOP_MESSAGE);
+  },
+  'AMAZON.StopIntent': function(){
+    this.emit(':tell', STOP_MESSAGE);
+  },
+  'Unhandled': function(){
+    this.emit(':tell', HELP_MESSAGE)
+  }
+};
+
+exports.handler = (event, context, callback) => {
+  const alexa = Alexa.handler(event, context);
+  alexa.APP_ID = APP_ID;
+  alexa.registerHandlers(handlers);
+  alexa.execute();
+};
